@@ -7,7 +7,7 @@ var getSessionExercises = require('../integration/GetSessionExercises');
 exports.do = function(request) {
 
   let cid = request.headers['x-correlation-id'];
-  let x = 10;
+  let x = request.query.days || 10;
 
   let today = moment().tz('Europe/Rome');
 

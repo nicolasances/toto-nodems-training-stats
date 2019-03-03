@@ -75,6 +75,8 @@ var prepareStats = (values) => {
  */
 var getMuscles = (days) => {
 
+  console.log(days);
+
   if (days == null) return [];
 
   let muscles = [];

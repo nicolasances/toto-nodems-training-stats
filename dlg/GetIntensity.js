@@ -135,7 +135,7 @@ var mergePerDay = (sessions) => {
     let date = sessions[i].session.date;
     let exercises = sessions[i].exercises;
 
-    console.log(exercises);
+    console.log(sessions[i]);
 
     let indexOfDate = indexOf(date);
 

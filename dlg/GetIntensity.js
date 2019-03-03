@@ -133,6 +133,7 @@ var mergePerDay = (sessions) => {
   for (var i = 0; i < sessions.length; i++) {
 
     console.log(sessions[i]);
+    console.log(sessions[i].session);
 
     let date = sessions[i].session.date;
     let exercises = session[i].exercises;

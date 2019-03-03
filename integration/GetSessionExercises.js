@@ -13,7 +13,7 @@ exports.do = function(session, cid) {
 
       success({
         session: session,
-        exericses: data.exercises
+        exercises: data.exercises
       });
 
     }, failure);

@@ -132,6 +132,8 @@ var mergePerDay = (sessions) => {
   // For every session, extract date and exercises
   for (var i = 0; i < sessions.length; i++) {
 
+    console.log(sessions[i]);
+
     let date = sessions[i].session.date;
     let exercises = session[i].exercises;
 

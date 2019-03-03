@@ -97,6 +97,8 @@ var getMuscles = (days) => {
       if (exists(exercises[e].muscleGroupId)) continue;
       else result.push(exercises[e].muscleGroupId);
     }
+
+    return result;
   }
 
   // For every date, extract the muscles from the exercises

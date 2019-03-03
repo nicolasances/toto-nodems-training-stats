@@ -8,4 +8,4 @@ The data will be used to generate the *statistical data* and that stats data wil
 
 When something changes in the rest of the training area (for example a new sessions is created, or a session is completed, etc..), this microservice will **receive a notification event** and will **clear the cache and recompute the stats**.
 
-![Diagram](https://github.com/nicolasances/toto-nodems-training-stats/readme-1.jpg)
+![Diagram](https://github.com/nicolasances/toto-nodems-training-stats/blob/master/readme-1.jpg)

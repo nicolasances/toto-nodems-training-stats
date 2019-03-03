@@ -140,7 +140,12 @@ var mergePerDay = (sessions) => {
 
     let indexOfDate = indexOf(date);
 
-    if (indexOfDate == -1) days.push({date: date, exercises: exercises});
+    if (indexOfDate == -1) days.push({
+      date: date,
+      fatigue: sessions[i].fatigue,
+      pain: sessions[i].pain,
+      exercises: exercises
+    });
     else days[indexOfDate].exercises.push(exercises);
 
   }

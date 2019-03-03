@@ -4,8 +4,6 @@ exports.do = function(session, cid) {
 
   return new Promise(function(success, failure) {
 
-    console.log(session);
-
     http({
       correlationId: cid,
       microservice: 'toto-nodems-training-session',

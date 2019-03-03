@@ -85,7 +85,7 @@ var getMuscles = (days) => {
     let result = []
 
     // Checks if a muscle already exists in the list of resulting muscles
-    var exists = (m) => {
+    var exists = (m, result) => {
       for (var r = 0; r < result.length; r++) {
         if (result[r] == m) return true;
       }
@@ -94,7 +94,7 @@ var getMuscles = (days) => {
 
     // For each exercise, extract the muscle
     for (var e = 0; e < exercises.length; e++) {
-      if (exists(exercises[e].muscleGroupId)) continue;
+      if (exists(exercises[e].muscleGroupId, result)) continue;
       else result.push(exercises[e].muscleGroupId);
     }
   }

@@ -11,8 +11,6 @@ exports.do = function(session, cid) {
       resource: '/sessions/' + session.id + '/exercises'
     }).then((data) => {
 
-      console.log(session);
-
       success({
         session: session,
         exericses: data.exercises

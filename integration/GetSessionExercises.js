@@ -2,7 +2,7 @@ var http = require('toto-request');
 
 exports.do = function(session, cid) {
 
-  return new Promise((success, failure) => {
+  return new Promise(function(success, failure) {
 
     http({
       correlationId: cid,

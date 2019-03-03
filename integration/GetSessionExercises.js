@@ -1,6 +1,6 @@
 var http = require('toto-request');
 
-exports.do = (session, cid) => {
+exports.do = function(session, cid) {
 
   return new Promise((success, failure) => {
 

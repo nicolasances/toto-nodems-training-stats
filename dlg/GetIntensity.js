@@ -144,10 +144,25 @@ var mergePerDay = (sessions) => {
       date: date,
       fatigue: sessions[i].fatigue,
       pain: sessions[i].pain,
-      exercises: exercises
+      exercises: exercises,
+      sessions: 1
     });
-    else days[indexOfDate].exercises.push(exercises);
+    else {
+      days[indexOfDate].exercises.push(exercises);
+      days[indexOfDate].fatigue += sessions[i].fatigue;
+      days[indexOfDate].pain += sessions[i].pain;
+      days[indexOfDate].sessions += 1;
+    }
 
+  }
+
+  // Calculate average pain and fatigue
+  for (var i = 0; i < days.length; i++) {
+
+    if (days[i].sessions > 1) {
+      days[i].pain = days[i].pain / days[i].sessions;
+      days[i].fatigue = days[i].fatigue / days[i].sessions;
+    }
   }
 
   return days;

@@ -103,7 +103,6 @@ var getMuscles = (days) => {
   }
 
   // For every date, extract the muscles from the exercises
-  console.log(days);
   for (var i  = 0; i < days.length; i++) {
 
     muscles.push({
@@ -142,6 +141,8 @@ var mergePerDay = (sessions) => {
     let exercises = sessions[i].exercises;
 
     let indexOfDate = indexOf(date);
+
+    console.log(sessions[i]);
 
     if (indexOfDate == -1) days.push({
       date: date,

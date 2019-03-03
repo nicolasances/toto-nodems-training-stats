@@ -75,8 +75,6 @@ var prepareStats = (values) => {
  */
 var getMuscles = (days) => {
 
-  console.log(days);
-
   if (days == null) return [];
 
   let muscles = [];
@@ -87,7 +85,7 @@ var getMuscles = (days) => {
     let result = []
 
     // Checks if a muscle already exists in the list of resulting muscles
-    var exists = (m, result) => {
+    var exists = (m) => {
       for (var r = 0; r < result.length; r++) {
         if (result[r] == m) return true;
       }
@@ -96,7 +94,7 @@ var getMuscles = (days) => {
 
     // For each exercise, extract the muscle
     for (var e = 0; e < exercises.length; e++) {
-      if (exists(exercises[e].muscleGroupId, result)) continue;
+      if (exists(exercises[e].muscleGroupId)) continue;
       else result.push(exercises[e].muscleGroupId);
     }
   }
@@ -136,6 +134,8 @@ var mergePerDay = (sessions) => {
 
     let date = sessions[i].session.date;
     let exercises = sessions[i].exercises;
+
+    console.log(exercises);
 
     let indexOfDate = indexOf(date);
 

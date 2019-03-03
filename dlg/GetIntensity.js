@@ -14,7 +14,7 @@ exports.do = function(request) {
   return new Promise(function(success, failure) {
 
     // 1. Get the sessions of the last x days
-    let dateFrom = today.subtract(x, 'days');
+    let dateFrom = today.subtract(x, 'days').format('YYYYMMDD');
 
     // Get the sessions (sorted in asc date)
     getSessions.do(dateFrom, cid).then((data) => {

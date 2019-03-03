@@ -32,8 +32,6 @@ exports.do = function(request) {
       // 3. Prepare the stats
       Promise.all(sePromises).then((values) => {
 
-        console.log(values);
-
         // Prepare the stats
         success({
           days: prepareStats(values)
@@ -146,15 +144,15 @@ var mergePerDay = (sessions) => {
 
     if (indexOfDate == -1) days.push({
       date: date,
-      fatigue: sessions[i].fatigue,
-      pain: sessions[i].pain,
+      fatigue: sessions[i].session.fatigue,
+      pain: sessions[i].session.pain,
       exercises: exercises,
       sessions: 1
     });
     else {
       days[indexOfDate].exercises.push(exercises);
-      days[indexOfDate].fatigue += sessions[i].fatigue;
-      days[indexOfDate].pain += sessions[i].pain;
+      days[indexOfDate].fatigue += sessions[i].session.fatigue;
+      days[indexOfDate].pain += sessions[i].session.pain;
       days[indexOfDate].sessions += 1;
     }
 

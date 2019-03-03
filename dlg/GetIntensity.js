@@ -107,6 +107,8 @@ var getMuscles = (days) => {
 
     muscles.push({
       date: days[i].date,
+      fatigue: days[i].fatigue,
+      pain: days[i].pain,
       muscles: findMuscles(days[i].exercises)
     });
   }

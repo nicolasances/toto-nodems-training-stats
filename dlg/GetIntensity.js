@@ -19,8 +19,6 @@ exports.do = function(request) {
     // Get the sessions (sorted in asc date)
     getSessions.do(dateFrom, cid).then((data) => {
 
-      console.log(data);
-
       let sePromises = [];
 
       // 2. For each session, get the exercises

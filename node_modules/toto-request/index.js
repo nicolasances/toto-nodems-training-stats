@@ -12,8 +12,14 @@ var newMsgId = function(cid) {
 
 /**
  * This function makes an http call and returns a standard Promise
+ * This function requires:
+ *
+ * - req 					:	the request as specified in the README file
+ * - host					: development server address, OPTIONAL, default false. Specify true if using it in local mode.
+ * 									E.g. pass https://imatzdev.it/apis to use the dev server
+ * - auth					: if the host requires auth, this will be used in the Authentication header
  */
-module.exports = function(req) {
+module.exports = function(req, host, auth) {
 
   return new Promise((success, failure) => {
 
@@ -31,9 +37,13 @@ module.exports = function(req) {
     // Message ID
     let msgId = newMsgId(req.correlationId);
 
+		// Define the address
+		let address = 'http://' + req.microservice + ':8080' + res;
+		if (host != null) address = host + res;
+
     // Define the request parameters
     let httpReq = {
-      url: 'http://' + req.microservice + ':8080' + res,
+      url: address,
       method: method,
       headers: {
         'Content-Type': 'application/json',
@@ -42,6 +52,9 @@ module.exports = function(req) {
         'x-msg-id': msgId
       }
     }
+
+		// Authorization header, if needed
+		if (auth != null) httpReq.headers['Authorization'] = auth;
 
     // In case there's a body
     if (req.body != null) httpReq.body = JSON.stringify(req.body);

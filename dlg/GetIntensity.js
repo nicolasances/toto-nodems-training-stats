@@ -34,7 +34,7 @@ exports.do = function(request) {
 
         // Prepare the stats
         success({
-          days: prepareStats(values)
+          days: prepareStats(values, dateFrom)
         });
 
       }, failure);
@@ -49,7 +49,7 @@ exports.do = function(request) {
  * Function that actually prepare the statistics
  * - values will be an [{}, {}] and each object is the one returned by getSessionExercises
  */
-var prepareStats = (values) => {
+var prepareStats = (values, dateFrom) => {
 
   if (values == null) return {};
 
@@ -60,7 +60,7 @@ var prepareStats = (values) => {
   // Merge per day - this will take the values and create an array that is per day, instead of per session
   // This to cover the case where there might be more sessions per day
   // days is going to be a [{date: 'YYYYMMDD', exercises: []}]
-  let days = mergePerDay(values);
+  let days = mergePerDay(values, dateFrom);
 
   // Get the muscles
   // daysAndMuscles is going to be a [{date: 'YYYYMMDD', muscles: ['chest', '...']}]
@@ -81,6 +81,8 @@ var getMuscles = (days) => {
 
   // Find muscles function
   var findMuscles = (exercises) => {
+
+    if (exercises == null) return null;
 
     let result = []
 
@@ -109,6 +111,7 @@ var getMuscles = (days) => {
       date: days[i].date,
       fatigue: days[i].fatigue,
       pain: days[i].pain,
+      rest: days[i].rest,
       muscles: findMuscles(days[i].exercises)
     });
   }
@@ -121,7 +124,7 @@ var getMuscles = (days) => {
  * Transforms the values into an array day-based
  * Missing days are transformed automatically into "rest days"
  */
-var mergePerDay = (sessions) => {
+var mergePerDay = (sessions, dateFrom) => {
 
   if (sessions == null) return [];
 
@@ -173,7 +176,7 @@ var mergePerDay = (sessions) => {
   sortDays(days);
 
   // Fill in rest days
-  fillInRestDays(days);
+  fillInRestDays(days, dateFrom);
 
   return days;
 
@@ -198,38 +201,51 @@ var sortDays = (days) => {
 /**
  * Fills in missing days as rest days
  */
-var fillInRestDays = (days) => {
+var fillInRestDays = (days, dateFrom) => {
 
   if (days == null) return null;
 
-  let cursorDay, lastFilledDate;
+  let cursorDay;
+
+  // Start at "dateFrom"
+  cursorDay = dateFrom;
 
   for (var i = 0; i < days.length; i++) {
 
-    cursorDay = days[i].date;
+    let date = days[i].date;
 
-    if (lastFilledDate != null) {
+    // Calculate the difference between the two => the number of missing training days
+    let diff = Math.abs(moment(date, 'YYYYMMDD').diff(moment(cursorDay, 'YYYYMMDD'), 'days'));
 
-      // Calculate the difference between the two => the number of missing training days
-      let diff = Math.abs(moment(cursorDay, 'YYYYMMDD').diff(moment(lastFilledDate, 'YYYYMMDD'), 'days'));
+    // Create the rest days
+    if (diff > 0) {
 
-      // Create the rest days
-      if (diff > 0) {
+      for (var d = 0; d < diff; d++) {
 
-        for (var d = 0; d < diff; d++) {
+        days.push({
+          date: moment(cursorDay, 'YYYYMMDD').add(1, 'days').format('YYYYMMDD'),
+          rest: true
+        });
 
-          days.push({
-            date: moment(lastFilledDate, 'YYYYMMDD').add(1, 'days').format('YYYYMMDD'),
-            rest: true
-          });
-
-        }
       }
     }
 
     // Update the lastFilledDate
-    lastFilledDate = cursorDay;
+    cursorDay = moment(date, 'YYYYMMDD').add(1, 'days').format('YYYYMMDD');
 
+  }
+
+  // If there are still days to fill
+  let targetDay = moment().format('YYYYMMDD');
+
+  while (cursorDay <= targetDay) {
+
+    days.push({
+      date: moment(cursorDay, 'YYYYMMDD').format('YYYYMMDD'),
+      rest: true
+    });
+
+    cursorDay = moment(cursorDay, 'YYYYMMDD').add(1, 'days').format('YYYYMMDD');
   }
 
 }

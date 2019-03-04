@@ -119,6 +119,7 @@ var getMuscles = (days) => {
 
 /**
  * Transforms the values into an array day-based
+ * Missing days are transformed automatically into "rest days"
  */
 var mergePerDay = (sessions) => {
 
@@ -147,7 +148,8 @@ var mergePerDay = (sessions) => {
       fatigue: sessions[i].session.fatigue,
       pain: sessions[i].session.pain,
       exercises: exercises,
-      sessions: 1
+      sessions: 1,
+      rest: false
     });
     else {
       days[indexOfDate].exercises.push(exercises);
@@ -167,6 +169,67 @@ var mergePerDay = (sessions) => {
     }
   }
 
+  // Sort per date
+  sortDays(days);
+
+  // Fill in rest days
+  fillInRestDays(days);
+
   return days;
+
+}
+
+/**
+ * Sort the days per date asc
+ */
+var sortDays = (days) => {
+
+  days.sort((a, b) => {
+
+    if (a < b) return -1;
+    else if (a > b) return 1;
+
+    return 0;
+
+  });
+
+}
+
+/**
+ * Fills in missing days as rest days
+ */
+var fillInRestDays = (days) => {
+
+  if (days == null) return null;
+
+  let cursorDay, lastFilledDate;
+
+  for (var i = 0; i < days.length; i++) {
+
+    cursorDay = days[i].date;
+
+    if (lastFilledDate != null) {
+
+      // Calculate the difference between the two => the number of missing training days
+      let diff = Math.abs(moment(cursorDay, 'YYYYMMDD').diff(moment(lastFilledDate, 'YYYYMMDD'), 'days'));
+
+      // Create the rest days
+      if (diff > 0) {
+
+        for (var d = 0; d < diff; d++) {
+
+          days.push({
+            date: moment(lastFilledDate, 'YYYYMMDD').add(1, 'days').format('YYYYMMDD'),
+            rest: true
+          });
+
+        }
+      }
+    }
+
+    // Update the lastFilledDate
+    lastFilledDate = cursorDay;
+
+  }
 
 }

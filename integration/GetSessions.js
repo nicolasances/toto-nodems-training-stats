@@ -2,7 +2,7 @@ var http = require('toto-request');
 
 exports.do = (dateFrom, cid) => {
 
-  http({
+  return http({
     correlationId: cid,
     microservice: 'toto-nodems-training-session',
     method: 'GET',

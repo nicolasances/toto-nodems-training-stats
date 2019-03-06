@@ -238,7 +238,12 @@ var fillInRestDays = (days, dateFrom) => {
   // If there are still days to fill
   let targetDay = moment().format('YYYYMMDD');
 
+  // Counter to stop infinite loops (you never know)
+  let t = 0;
+
   while (cursorDay <= targetDay) {
+
+    if (t++ > 100) break;
 
     days.push({
       date: moment(cursorDay, 'YYYYMMDD').format('YYYYMMDD'),

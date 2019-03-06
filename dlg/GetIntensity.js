@@ -214,7 +214,7 @@ var fillInRestDays = (days, dateFrom) => {
 
   for (var i = 0; i <= numOfDays; i++) {
 
-    expectedDays.push(cursor);
+    expectedDays.push(cursor.format('YYYYMMDD'));
 
     cursor = cursor.add(1, 'days');
 
@@ -227,14 +227,14 @@ var fillInRestDays = (days, dateFrom) => {
 
     if (i < days.length) {
 
-      if (days[i].date != expectedDays[i].format('YYYYMMDD')) days.splice(i, 0, {
-        date: expectedDays[i].format('YYYYMMDD'),
+      if (days[i].date != expectedDays[i]) days.splice(i, 0, {
+        date: expectedDays[i],
         rest: true
       });
 
     }
     else days.push({
-      date: expectedDays[i].format('YYYYMMDD'),
+      date: expectedDays[i],
       rest: true
     });
 

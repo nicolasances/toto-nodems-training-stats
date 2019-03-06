@@ -203,54 +203,41 @@ var sortDays = (days) => {
  */
 var fillInRestDays = (days, dateFrom) => {
 
-  if (days == null) return null;
+  let today = moment().tz('Europe/Rome');
+  let start = moment(dateFrom, 'YYYYMMDD').tz('Europe/Rome');
 
-  let cursorDay;
+  let numOfDays = parseInt(today.diff(start, 'days'));
 
-  // Start at "dateFrom"
-  cursorDay = dateFrom;
+  // 1. Generates all the dates
+  let expectedDays = [];
+  let cursor = start;
 
-  for (var i = 0; i < days.length; i++) {
+  for (var i = 0; i <= numOfDays; i++) {
 
-    let date = days[i].date;
+    expectedDays.push(cursor);
 
-    // Calculate the difference between the two => the number of missing training days
-    let diff = Math.abs(moment(date, 'YYYYMMDD').diff(moment(cursorDay, 'YYYYMMDD'), 'days'));
-
-    // Create the rest days
-    if (diff > 0) {
-
-      for (var d = 0; d < diff; d++) {
-
-        days.push({
-          date: moment(cursorDay, 'YYYYMMDD').add(1, 'days').format('YYYYMMDD'),
-          rest: true
-        });
-
-      }
-    }
-
-    // Update the lastFilledDate
-    cursorDay = moment(date, 'YYYYMMDD').add(1, 'days').format('YYYYMMDD');
+    cursor = cursor.add(1, 'days');
 
   }
 
-  // If there are still days to fill
-  let targetDay = moment().format('YYYYMMDD');
+  // 2. Check what indexes are missing
+  let missingDates = [];
 
-  // Counter to stop infinite loops (you never know)
-  let t = 0;
+  for (var i = 0; i < expectedDays.length; i++) {
 
-  while (cursorDay <= targetDay) {
+    if (i < days.length) {
 
-    if (t++ > 100) break;
+      if (days[i].date != expectedDays[i].format('YYYYMMDD')) days.splice(i, 0, {
+        date: expectedDays[i].format('YYYYMMDD'),
+        rest: true
+      });
 
-    days.push({
-      date: moment(cursorDay, 'YYYYMMDD').format('YYYYMMDD'),
+    }
+    else days.push({
+      date: expectedDays[i].format('YYYYMMDD'),
       rest: true
     });
 
-    cursorDay = moment(cursorDay, 'YYYYMMDD').add(1, 'days').format('YYYYMMDD');
   }
 
 }

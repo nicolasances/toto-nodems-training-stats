@@ -63,7 +63,7 @@ var prepareStats = (values, dateFrom) => {
   let days = mergePerDay(values, dateFrom);
 
   // Get the muscles
-  // daysAndMuscles is going to be a [{date: 'YYYYMMDD', muscles: ['chest', '...']}]
+  // daysAndMuscles is going to be a [{date: 'YYYYMMDD', muscles: [{muscle: 'chest', sessionId: ''}, {...}]}]
   let daysAndMuscles = getMuscles(days);
 
   return daysAndMuscles;
@@ -80,9 +80,9 @@ var getMuscles = (days) => {
   let muscles = [];
 
   // Find muscles function
-  var findMuscles = (exercises) => {
+  var findMuscles = (day) => {
 
-    if (exercises == null) return null;
+    if (day.exercises == null) return null;
 
     let result = []
 
@@ -95,10 +95,10 @@ var getMuscles = (days) => {
     }
 
     // For each exercise, extract the muscle
-    for (var e = 0; e < exercises.length; e++) {
-      if (exercises[e].muscleGroupId == null) continue;
-      if (exists(exercises[e].muscleGroupId)) continue;
-      else result.push(exercises[e].muscleGroupId);
+    for (var e = 0; e < day.exercises.length; e++) {
+      if (day.exercises[e].muscleGroupId == null) continue;
+      if (exists(day.exercises[e].muscleGroupId)) continue;
+      else result.push({muscle: day.exercises[e].muscleGroupId, sessionId: day.session.id});
     }
 
     return result;
@@ -112,7 +112,7 @@ var getMuscles = (days) => {
       fatigue: days[i].fatigue,
       pain: days[i].pain,
       rest: days[i].rest,
-      muscles: findMuscles(days[i].exercises)
+      muscles: findMuscles(days[i])
     });
   }
 

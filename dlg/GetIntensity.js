@@ -80,9 +80,9 @@ var getMuscles = (days) => {
   let muscles = [];
 
   // Find muscles function
-  var findMuscles = (day) => {
+  var findMuscles = (exercises) => {
 
-    if (day.exercises == null) return null;
+    if (exercises == null) return null;
 
     let result = []
 
@@ -95,10 +95,10 @@ var getMuscles = (days) => {
     }
 
     // For each exercise, extract the muscle
-    for (var e = 0; e < day.exercises.length; e++) {
-      if (day.exercises[e].muscleGroupId == null) continue;
-      if (exists(day.exercises[e].muscleGroupId)) continue;
-      else result.push({muscle: day.exercises[e].muscleGroupId, sessionId: day.session.id});
+    for (var e = 0; e < exercises.length; e++) {
+      if (exercises[e].muscleGroupId == null) continue;
+      if (exists(exercises[e].muscleGroupId)) continue;
+      else result.push({muscle: exercises[e].muscleGroupId, sessionId: exercises[e].sessionId});
     }
 
     return result;

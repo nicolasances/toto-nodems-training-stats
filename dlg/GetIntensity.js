@@ -112,7 +112,7 @@ var getMuscles = (days) => {
       fatigue: days[i].fatigue,
       pain: days[i].pain,
       rest: days[i].rest,
-      muscles: findMuscles(days[i])
+      muscles: findMuscles(days[i].exercises)
     });
   }
 

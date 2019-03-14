@@ -89,7 +89,7 @@ var getMuscles = (days) => {
     // Checks if a muscle already exists in the list of resulting muscles
     var exists = (m) => {
       for (var r = 0; r < result.length; r++) {
-        if (result[r] == m) return true;
+        if (result[r].muscle == m) return true;
       }
       return false;
     }

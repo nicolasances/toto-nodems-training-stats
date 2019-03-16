@@ -1,5 +1,6 @@
 
 var moment = require('moment-timezone');
+var logger = require('toto-logger');
 
 var getSessions = require('../integration/GetSessions');
 var getSessionExercises = require('../integration/GetSessionExercises');
@@ -24,6 +25,8 @@ exports.do = function(request) {
       // 2. For each session, get the exercises
       for (var i = 0; i < data.sessions.length; i++) {
 
+        logger.compute(cid, 'Retrieving exercises for session ' + data.sessions[i].id, 'info');
+
         // getSessionExercises will return a {session: session, exercises: []}
         sePromises.push(getSessionExercises.do(data.sessions[i], cid));
 
@@ -31,6 +34,8 @@ exports.do = function(request) {
 
       // 3. Prepare the stats
       Promise.all(sePromises).then((values) => {
+
+        logger.compute(cid, 'Gotten the following exercises: ' + JSON.stringify(values), 'info');
 
         // Prepare the stats
         success({

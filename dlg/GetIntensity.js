@@ -25,8 +25,6 @@ exports.do = function(request) {
       // 2. For each session, get the exercises
       for (var i = 0; i < data.sessions.length; i++) {
 
-        logger.compute(cid, 'Retrieving exercises for session ' + data.sessions[i].id, 'info');
-
         // getSessionExercises will return a {session: session, exercises: []}
         sePromises.push(getSessionExercises.do(data.sessions[i], cid));
 
@@ -149,8 +147,6 @@ var mergePerDay = (sessions, dateFrom) => {
 
     let indexOfDate = indexOf(date);
 
-    console.log(indexOfDate);
-
     if (indexOfDate == -1) days.push({
       date: date,
       fatigue: sessions[i].session.fatigue,
@@ -164,6 +160,8 @@ var mergePerDay = (sessions, dateFrom) => {
       days[indexOfDate].fatigue += sessions[i].session.fatigue;
       days[indexOfDate].pain += sessions[i].session.pain;
       days[indexOfDate].sessions += 1;
+
+      console.log(days[indexOfDate]);
     }
 
   }

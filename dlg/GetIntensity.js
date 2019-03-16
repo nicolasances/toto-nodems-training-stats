@@ -156,12 +156,10 @@ var mergePerDay = (sessions, dateFrom) => {
       rest: false
     });
     else {
-      days[indexOfDate].exercises.push(exercises);
+      days[indexOfDate].exercises = [...exercises, ...days[indexOfDate].exercises];
       days[indexOfDate].fatigue += sessions[i].session.fatigue;
       days[indexOfDate].pain += sessions[i].session.pain;
       days[indexOfDate].sessions += 1;
-
-      console.log(days[indexOfDate]);
     }
 
   }

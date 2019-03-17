@@ -60,11 +60,11 @@ var prepareStats = (values, dateFrom) => {
 
   // Merge per day - this will take the values and create an array that is per day, instead of per session
   // This to cover the case where there might be more sessions per day
-  // days is going to be a [{date: 'YYYYMMDD', exercises: []}]
+  // days is going to be a [{date: 'YYYYMMDD', exercises: [], existingPainLevels: [{muscle: '', pain: 0|1|2|3}, {...}]}]
   let days = mergePerDay(values, dateFrom);
 
   // Get the muscles
-  // daysAndMuscles is going to be a [{date: 'YYYYMMDD', muscles: [{muscle: 'chest', sessionId: ''}, {...}]}]
+  // daysAndMuscles is going to be a [{date: 'YYYYMMDD', muscles: [{muscle: 'chest', sessionId: '', pain: 0|1|2|3}, {...}]}]
   let daysAndMuscles = getMuscles(days);
 
   return daysAndMuscles;
@@ -72,7 +72,9 @@ var prepareStats = (values, dateFrom) => {
 }
 
 /**
- * Transforms the [{date: 'YYYYMMDD', exercises: []}] into a [{date: 'YYYYMMDD', muscles: ['chest', '...']}]
+ * Transforms in a "day and muscle" based array
+ * Input  : [{date: 'YYYYMMDD', exercises: [], existingPainLevels: [{muscle: '', pain: 0|1|2|3}, {...}]}]
+ * Output : [{date: 'YYYYMMDD', muscles: [{muscle: 'chest', sessionId: '', pain: 0|1|2|3}, {...}]}]
  */
 var getMuscles = (days) => {
 
@@ -81,7 +83,7 @@ var getMuscles = (days) => {
   let muscles = [];
 
   // Find muscles function
-  var findMuscles = (exercises) => {
+  var findMuscles = (exercises, existingPainLevels) => {
 
     if (exercises == null) return null;
 
@@ -95,11 +97,25 @@ var getMuscles = (days) => {
       return false;
     }
 
+    // Finds an existing pain level (pain level that has already been set) for the muscle
+    var findExistingPainLevel = (m) => {
+      if (existingPainLevels == null) return null;
+      for (var p = 0 ; p < existingPainLevels.length; p++) {
+        if (existingPainLevels[p].muscle == m) return existingPainLevels[p].painLevel;
+      }
+      return null;
+    }
+
     // For each exercise, extract the muscle
     for (var e = 0; e < exercises.length; e++) {
       if (exercises[e].muscleGroupId == null) continue;
       if (exists(exercises[e].muscleGroupId)) continue;
       else result.push({muscle: exercises[e].muscleGroupId, sessionId: exercises[e].sessionId});
+    }
+
+    // For each extracted muscle, find the pain level
+    for (var x = 0; x < result.length; x++) {
+      result[x].pain = findExistingPainLevel(result[x].muscle);
     }
 
     return result;
@@ -113,7 +129,7 @@ var getMuscles = (days) => {
       fatigue: days[i].fatigue,
       pain: days[i].pain,
       rest: days[i].rest,
-      muscles: findMuscles(days[i].exercises)
+      muscles: findMuscles(days[i].exercises, days[i].existingPainLevels)
     });
   }
 
@@ -144,6 +160,7 @@ var mergePerDay = (sessions, dateFrom) => {
 
     let date = sessions[i].session.date;
     let exercises = sessions[i].exercises;
+    let muscles = sessions[i].muscles;
 
     let indexOfDate = indexOf(date);
 
@@ -153,13 +170,15 @@ var mergePerDay = (sessions, dateFrom) => {
       pain: sessions[i].session.pain,
       exercises: exercises,
       sessions: 1,
-      rest: false
+      rest: false,
+      existingPainLevels: muscles;
     });
     else {
       days[indexOfDate].exercises = [...exercises, ...days[indexOfDate].exercises];
       days[indexOfDate].fatigue += sessions[i].session.fatigue != null ? sessions[i].session.fatigue : 0;
       days[indexOfDate].pain += sessions[i].session.pain != null ? sessions[i].session.pain : 0;
       days[indexOfDate].sessions += sessions[i].session.pain != null ? 1 : 0;
+      days[indexOfDate].existingPainLevels = [...muscles, ...days[indexOfDate].existingPainLevels];
     }
 
   }

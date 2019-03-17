@@ -171,7 +171,7 @@ var mergePerDay = (sessions, dateFrom) => {
       exercises: exercises,
       sessions: 1,
       rest: false,
-      existingPainLevels: muscles;
+      existingPainLevels: muscles
     });
     else {
       days[indexOfDate].exercises = [...exercises, ...days[indexOfDate].exercises];

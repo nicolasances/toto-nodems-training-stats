@@ -68,7 +68,7 @@ var buildDates = (dateFrom) => {
   while (from.isSameOrBefore(today)) {
 
     dates.push({
-      date: from.format('YYYYMMDD');
+      date: from.format('YYYYMMDD')
     });
 
     from.add(1, 'days');

@@ -183,6 +183,8 @@ var mergePerDay = (sessions, dateFrom) => {
 
   }
 
+  console.log(days);
+
   // Calculate average pain and fatigue
   for (var i = 0; i < days.length; i++) {
 

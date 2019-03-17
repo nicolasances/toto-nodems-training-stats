@@ -160,7 +160,7 @@ var mergePerDay = (sessions, dateFrom) => {
 
     let date = sessions[i].session.date;
     let exercises = sessions[i].exercises;
-    let muscles = sessions[i].muscles;
+    let muscles = sessions[i].session.muscles;
 
     let indexOfDate = indexOf(date);
 
@@ -182,8 +182,6 @@ var mergePerDay = (sessions, dateFrom) => {
     }
 
   }
-
-  console.log(days);
 
   // Calculate average pain and fatigue
   for (var i = 0; i < days.length; i++) {

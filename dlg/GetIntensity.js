@@ -178,8 +178,7 @@ var mergePerDay = (sessions, dateFrom) => {
       days[indexOfDate].fatigue += sessions[i].session.fatigue != null ? sessions[i].session.fatigue : 0;
       days[indexOfDate].pain += sessions[i].session.pain != null ? sessions[i].session.pain : 0;
       days[indexOfDate].sessions += sessions[i].session.pain != null ? 1 : 0;
-      console.log(muscles);
-      days[indexOfDate].existingPainLevels = [...muscles, ...days[indexOfDate].existingPainLevels];
+      if (muscles) days[indexOfDate].existingPainLevels = [...muscles, ...days[indexOfDate].existingPainLevels];
     }
 
   }

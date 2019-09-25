@@ -38,7 +38,7 @@ exports.do = function(request) {
           days: prepareStats(values, dateFrom)
         });
 
-      }, failure);
+      }, (a) => {console.log(a); failure();});
 
     }, failure);
 

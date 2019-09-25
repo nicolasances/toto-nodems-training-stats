@@ -35,10 +35,10 @@ exports.do = function(request) {
 
         // Prepare the stats
         success({
-          days: prepareStats(values, dateFrom)
+          days: prepareStats(values, dateFrom, cid)
         });
 
-      }, (a) => {console.log(a); failure();});
+      }, failure);
 
     }, failure);
 
@@ -50,7 +50,7 @@ exports.do = function(request) {
  * Function that actually prepare the statistics
  * - values will be an [{}, {}] and each object is the one returned by getSessionExercises
  */
-var prepareStats = (values, dateFrom) => {
+var prepareStats = (values, dateFrom, cid) => {
 
   if (values == null) return {};
 
@@ -61,7 +61,7 @@ var prepareStats = (values, dateFrom) => {
   // Merge per day - this will take the values and create an array that is per day, instead of per session
   // This to cover the case where there might be more sessions per day
   // days is going to be a [{date: 'YYYYMMDD', exercises: [], existingPainLevels: [{muscle: '', pain: 0|1|2|3}, {...}]}]
-  let days = mergePerDay(values, dateFrom);
+  let days = mergePerDay(values, dateFrom, cid);
 
   // Get the muscles
   // daysAndMuscles is going to be a [{date: 'YYYYMMDD', muscles: [{muscle: 'chest', sessionId: '', pain: 0|1|2|3}, {...}]}]
@@ -161,6 +161,11 @@ var mergePerDay = (sessions, dateFrom) => {
     let date = sessions[i].session.date;
     let exercises = sessions[i].exercises;
     let muscles = sessions[i].session.muscles;
+
+    // If for any reason the "muscles" is empty, there's a problem (probably)
+    if (!muscles) {
+      logger.compute(cid, 'No muscles found for session ' + sessions[i].session.id, 'error');
+    }
 
     let indexOfDate = indexOf(date);
 

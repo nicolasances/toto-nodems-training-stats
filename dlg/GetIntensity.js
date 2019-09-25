@@ -164,7 +164,7 @@ var mergePerDay = (sessions, dateFrom, cid) => {
 
     // If for any reason the "muscles" is empty, there's a problem (probably)
     if (!muscles) {
-      logger.compute(cid, 'No muscles found for session ' + sessions[i].session.id, 'error');
+      logger.compute(cid, 'No muscles found for session ' + sessions[i].session.id, 'warn');
     }
 
     let indexOfDate = indexOf(date);

@@ -141,7 +141,7 @@ var getMuscles = (days) => {
  * Transforms the values into an array day-based
  * Missing days are transformed automatically into "rest days"
  */
-var mergePerDay = (sessions, dateFrom) => {
+var mergePerDay = (sessions, dateFrom, cid) => {
 
   if (sessions == null) return [];
 
